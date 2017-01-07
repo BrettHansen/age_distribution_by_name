@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Age Distributions of Living Americans by Name</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <link href="stylesheet.css" rel="stylesheet">
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+</head>
+<body>
+	<div id="controls">
+		<h3 class="no-margin">Search Name</h3>
+		<input type="text" name="name_entry" id="name_entry" class="form-control">
+		<h3>Sorting Parameters</h3>
+		<span class="text-muted">Each slider controls the relative importance of that parameter in deciding the closest names to the search name.</span>
+		<div id="slider_controls"></div>
+		<h3>Directions</h3>
+		<span class="text-muted">You can search for a name or click on one already present to see other names with a similar age distribution. Click on a distribution to see a detailed graph view for that name.</span>
+		<h3>Methodology</h3>
+		<span class="text-muted">These name distributions are calculated from estimates of the ages of living Americans. The estimation method and general design were borrowed from FiveThirtyEight in their article <a href="http://fivethirtyeight.com/features/how-to-tell-someones-age-when-all-you-know-is-her-name/">How to Tell Someone’s Age When All You Know Is Her Name</a>.</span>
+	</div>
+	<div id="distribution"></div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="main.js"></script>
+</body>
+</html>
