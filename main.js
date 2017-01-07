@@ -271,8 +271,7 @@ $(function() {
 		slider_controls.append(label).append(div);
 	}
 
-	// $.get("//bretthansen.github.io/age_distribution_by_name/data.json", function(data) {
-	$.get("/data.json", function(data) {
+	$.get("//bretthansen.github.io/age_distribution_by_name/data.json", function(data) {
 		distributions = data;
 		distributions.sort(function(a, b) {
 			return a.name < b.name ? -1 : a.name == b.name ? (b.total - a.total) : 1;
