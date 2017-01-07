@@ -76,3 +76,7 @@ text.age_label {
 .no-margin {
 	margin: 0;
 }
+
+.inactive {
+	color: #aaaaaa;
+}

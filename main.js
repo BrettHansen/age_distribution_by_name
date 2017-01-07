@@ -22,7 +22,6 @@ var parameters = [	{"display": "25th Percentile", "name": "q1"},
 					{"display": "75th Percentile", "name": "q3"},
 					{"display": "Popularity (Total)", "name": "total"},
 					{"display": "Mean Age", "name": "mean"}];
-var use_param = [true, true, true, true, true];
 var param_values = [0, 0, 0, 0, 0];
 
 function getCloseNames() {
@@ -45,30 +44,28 @@ function getCloseNames() {
 }
 
 function setParamValues() {
-	if(use_param[0]) // q0
-		param_values[0] = $("#param_" + parameters[0].name).slider("value") / 100.0;
-	if(use_param[1]) // q1
-		param_values[1] = $("#param_" + parameters[1].name).slider("value") / 100.0;
-	if(use_param[2]) // q2
-		param_values[2] = $("#param_" + parameters[2].name).slider("value") / 100.0;
-	if(use_param[3]) // total
-		param_values[3] = $("#param_" + parameters[3].name).slider("value") / 20.0;
-	if(use_param[4]) // mean
-		param_values[4] = $("#param_" + parameters[4].name).slider("value") / 20.0;
+	param_values[0] = $("#param_" + parameters[0].name).slider("value") / 100.0;
+	param_values[1] = $("#param_" + parameters[1].name).slider("value") / 100.0;
+	param_values[2] = $("#param_" + parameters[2].name).slider("value") / 100.0;
+	param_values[3] = $("#param_" + parameters[3].name).slider("value") / 20.0;
+	param_values[4] = $("#param_" + parameters[4].name).slider("value") / 20.0;
+
+	for(var i in parameters) {
+		var slider = $("#param_" + parameters[i].name);
+		if(slider.slider("value") == 0)
+			slider.prev().addClass("inactive");
+		else
+			slider.prev().removeClass("inactive");
+	}
 }
 
 function dist(a, b) {
 	var score = 1;
-	if(use_param[0])
-		score += Math.pow(a.q1 - b.q1, 2) * param_values[0];
-	if(use_param[1])
-		score += Math.pow(a.q2 - b.q2, 2) * param_values[1];
-	if(use_param[2])
-		score += Math.pow(a.q3 - b.q3, 2) * param_values[2];
-	if(use_param[3])
-		score *= Math.pow(Math.max(a.total, b.total) / Math.min(a.total, b.total), param_values[3]);
-	if(use_param[4])
-		score *= Math.pow(Math.max(a.mean, b.mean) / Math.min(a.mean, b.mean), param_values[4]);
+	score += Math.pow(a.q1 - b.q1, 2) * param_values[0];
+	score += Math.pow(a.q2 - b.q2, 2) * param_values[1];
+	score += Math.pow(a.q3 - b.q3, 2) * param_values[2];
+	score *= Math.pow(Math.max(a.total, b.total) / Math.min(a.total, b.total), param_values[3]);
+	score *= Math.pow(Math.max(a.mean, b.mean) / Math.min(a.mean, b.mean), param_values[4]);
 	return score;
 }
 
@@ -274,7 +271,8 @@ $(function() {
 		slider_controls.append(label).append(div);
 	}
 
-	$.get("//bretthansen.github.io/age_distribution_by_name/data.json", function(data) {
+	// $.get("//bretthansen.github.io/age_distribution_by_name/data.json", function(data) {
+	$.get("/data.json", function(data) {
 		distributions = data;
 		distributions.sort(function(a, b) {
 			return a.name < b.name ? -1 : a.name == b.name ? (b.total - a.total) : 1;
