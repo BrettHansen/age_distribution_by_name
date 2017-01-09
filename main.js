@@ -78,7 +78,7 @@ function initialize(selected_name_index, same_name) {
 
 	$("#name_entry").val(fixNameCase(distributions[selected_name_index].name));
 	current_name_index = selected_name_index;
-	svg_width = $("#distribution").width();
+	svg_width = $("#distribution").width() - 15;
 	svg_height = $("#distribution").height();
 
 	name_buffer_size = parseInt(svg_height / 50 - 2);
