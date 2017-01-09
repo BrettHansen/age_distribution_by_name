@@ -78,7 +78,7 @@ function initialize(selected_name_index, same_name) {
 
 	$("#name_entry").val(fixNameCase(distributions[selected_name_index].name));
 	current_name_index = selected_name_index;
-	svg_width = $("#distribution").width() - 15;
+	svg_width = $("#distribution").width() - 10;
 	svg_height = $("#distribution").height();
 
 	name_buffer_size = parseInt(svg_height / 50 - 2);
@@ -131,15 +131,6 @@ function initialize(selected_name_index, same_name) {
 					.attr("stroke-width", "1px")
 					.style("fill", function(d) {
 						return d.highlight;
-					})
-					.on("click", function(d) {
-						initialize(getNameIndex(d.name, d.sex));
-					})
-					.on("mouseover", function(d) {
-						d3.select(d3.event.target).style("fill", "#dddddd");
-					})
-					.on("mouseout", function(d) {
-						d3.select(d3.event.target).style("fill", d.highlight);
 					});
 
 	var rects = svg.selectAll("rect.range")
@@ -216,7 +207,16 @@ function initialize(selected_name_index, same_name) {
 						return d.y + box_height / 2.0;
 					})
 					.attr("alignment-baseline", "middle")
-					.attr("text-anchor", "end");
+					.attr("text-anchor", "end")
+					.on("click", function(d) {
+						initialize(getNameIndex(d.name, d.sex));
+					})
+					.on("mouseover", function(d) {
+						d3.select(d3.event.target).style("fill", "#dddddd");
+					})
+					.on("mouseout", function(d) {
+						d3.select(d3.event.target).style("fill", d.highlight);
+					});
 
 	var labels = svg.selectAll("text.age_label")
 					.data(d3.range(0, 95, 10))
