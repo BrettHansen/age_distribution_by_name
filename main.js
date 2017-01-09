@@ -271,7 +271,7 @@ $(function() {
 		slider_controls.append(label).append(div);
 	}
 
-	$.get("/data/quart_dists.json", function(data) {
+	$.get("data/quart_dists.json", function(data) {
 		distributions = data;
 		distributions.sort(function(a, b) {
 			return a.name < b.name ? -1 : a.name == b.name ? (b.total - a.total) : 1;
