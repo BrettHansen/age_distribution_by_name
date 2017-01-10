@@ -61,7 +61,7 @@ text.age_label {
     pointer-events: none;
 }
 
-.highlight {
+.dist-highlight, .name-highlight {
 	cursor: pointer;
 }
 
@@ -79,4 +79,10 @@ text.age_label {
 
 .inactive {
 	color: #aaaaaa;
+}
+
+.modal-wide {
+  width: 50%;
+  min-width: 700px;
+  margin-top: 5%;
 }

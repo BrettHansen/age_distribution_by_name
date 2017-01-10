@@ -23,6 +23,7 @@ var parameters = [	{"display": "25th Percentile", "name": "q1"},
 					{"display": "Popularity (Total)", "name": "total"},
 					{"display": "Mean Age", "name": "mean"}];
 var param_values = [0, 0, 0, 0, 0];
+var detail_modal;
 
 function getCloseNames() {
 	var data = dist_clone.slice(offset, offset + name_buffer_size * 2 + 1);
@@ -110,6 +111,8 @@ function initialize(selected_name_index, same_name) {
 		});
 	}
 
+	detail_modal = $("#modal-dist-detail");
+
 	var svg = d3.select("#distribution")
 				.append("svg")
 				.attr("width", svg_width)
@@ -117,10 +120,12 @@ function initialize(selected_name_index, same_name) {
 
 	close_names = getCloseNames();
 
-	var highlight = svg.selectAll("rect.highlight")
+	var dist_highlight = svg.selectAll("rect.dist-highlight")
 					.data(close_names)
 					.enter().append("rect")
-					.attr("class", "highlight")
+					.attr("class", "dist-highlight")
+					.attr("data-toggle", "modal")
+					.attr("data-target", "#modal-dist-detail")
 					.attr("x", margin_width + name_offset)
 					.attr("y", function(d) {
 						return d.y;
@@ -133,7 +138,7 @@ function initialize(selected_name_index, same_name) {
 						return d.highlight;
 					})
 					.on("click", function(d) {
-						initialize(getNameIndex(d.name, d.sex));
+						populateDetailModal(d);
 					})
 					.on("mouseover", function(d) {
 						d3.select(d3.event.target).style("fill", "#dddddd");
@@ -182,7 +187,9 @@ function initialize(selected_name_index, same_name) {
 						return height + head_height + 2;
 					})
 					.attr("stroke", "gray")
-					.attr("stroke-width", 1);
+					.attr("stroke-width", function(d) {
+						return d.index == 0 ? 2 : 1;
+					});
 
 	var circles = svg.selectAll("circle.median")
 					.data(close_names)
@@ -198,6 +205,31 @@ function initialize(selected_name_index, same_name) {
 					.attr("stroke", "white")
 					.attr("stroke-width", "2px")
 					.style("fill", "#EC5F5F");
+
+	var name_highlight = svg.selectAll("rect.name-highlight")
+					.data(close_names)
+					.enter().append("rect")
+					.attr("class", "name-highlight")
+					.attr("x", 0)
+					.attr("y", function(d) {
+						return d.y;
+					})
+					.attr("width", name_offset)
+					.attr("height", box_height)
+					.attr("stroke", "none")
+					.attr("stroke-width", "1px")
+					.style("fill", function(d) {
+						return d.highlight;
+					})
+					.on("click", function(d) {
+						initialize(getNameIndex(d.name, d.sex));
+					})
+					.on("mouseover", function(d) {
+						d3.select(d3.event.target).style("fill", "#dddddd");
+					})
+					.on("mouseout", function(d) {
+						d3.select(d3.event.target).style("fill", d.highlight);
+					});
 
 	var names = svg.selectAll("text.name")
 					.data(close_names)
@@ -345,6 +377,13 @@ $(function() {
 		initialize(getNameIndex(choice[0], choice[1]));
 	});
 });
+
+function populateDetailModal(data) {
+	detail_modal.find(".name-fill").text(fixNameCase(data.name));
+
+
+	detail_modal.show();
+}
 
 function fixNameCase(name) {
 	return name[0].toUpperCase() + name.slice(1, name.length).toLowerCase();
