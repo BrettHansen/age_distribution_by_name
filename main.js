@@ -24,6 +24,7 @@ var parameters = [	{"display": "25th Percentile", "name": "q1"},
 					{"display": "Mean Age", "name": "mean"}];
 var param_values = [0, 0, 0, 0, 0];
 var detail_modal;
+var detail_data;
 
 function getCloseNames() {
 	var data = dist_clone.slice(offset, offset + name_buffer_size * 2 + 1);
@@ -77,7 +78,7 @@ function initialize(selected_name_index, same_name) {
 		return;
 	}
 
-	$("#name_entry").val(fixNameCase(distributions[selected_name_index].name));
+	$("#name_entry").val(formatName(distributions[selected_name_index].name));
 	current_name_index = selected_name_index;
 	svg_width = $("#distribution").width() - 10;
 	svg_height = $("#distribution").height();
@@ -112,6 +113,7 @@ function initialize(selected_name_index, same_name) {
 	}
 
 	detail_modal = $("#modal-dist-detail");
+	detail_data = new Object();
 
 	var svg = d3.select("#distribution")
 				.append("svg")
@@ -138,7 +140,7 @@ function initialize(selected_name_index, same_name) {
 						return d.highlight;
 					})
 					.on("click", function(d) {
-						populateDetailModal(d);
+						loadDetailData(d);
 					})
 					.on("mouseover", function(d) {
 						d3.select(d3.event.target).style("fill", "#dddddd");
@@ -341,11 +343,11 @@ $(function() {
 
 			var ul = $("<ul id=\"suggestions\"></ul>");
 			for(var key in suggestions) {
-				var li = $("<li>" + (suggestions[key].obj.sex == "M" ? "\u2642" : "\u2640") + "\t" + fixNameCase(suggestions[key].obj.name) + "</li>");
+				var li = $("<li>" + (suggestions[key].obj.sex == "M" ? "\u2642" : "\u2640") + "\t" + formatName(suggestions[key].obj.name) + "</li>");
 				li.click({index : suggestions[key].index}, function(e) {
 					e.stopPropagation();
 					var index = e.data.index;
-					search.val(fixNameCase(distributions[index].name));
+					search.val(formatName(distributions[index].name));
 					suggestions_div.empty();
 					suggestions_div.hide();
 					initialize(index);
@@ -378,13 +380,32 @@ $(function() {
 	});
 });
 
-function populateDetailModal(data) {
-	detail_modal.find(".name-fill").text(fixNameCase(data.name));
-
-
-	detail_modal.show();
+function createDetailImage(name, sex) {
+	var total = 0;
+	var dist = detail_data[name[0]][name][sex];
+	for(var y in dist)
+		total += dist[y]
+	detail_modal.find("#detail-modal-fill").text("Estimated number of living " + (sex == "M" ? "male " : "female ") + formatName(name) + "s: " + total.toString());
+	console.log(detail_data[name[0]][name][sex]);
 }
 
-function fixNameCase(name) {
+function loadDetailData(data) {
+	detail_modal.find(".name-fill").text(formatName(data.name));
+	detail_modal.show();
+
+	var name = data.name.toUpperCase();
+	var sex = data.sex;
+	if(name[0] in detail_data)
+		createDetailImage(name, sex);
+	else {
+		$.get("data/detailed_data/" + name[0] + ".json", function(data) {
+			// TODO: name should be passed in
+			detail_data[name[0]] = data;
+			createDetailImage(name, sex);
+		});
+	}
+}
+
+function formatName(name) {
 	return name[0].toUpperCase() + name.slice(1, name.length).toLowerCase();
 }
