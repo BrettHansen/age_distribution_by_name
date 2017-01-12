@@ -390,20 +390,23 @@ function createDetailImage(name, sex) {
 }
 
 function loadDetailData(data) {
+	detail_modal.find("#detail-modal-fill").empty();
 	detail_modal.find(".name-fill").text(formatName(data.name));
 	detail_modal.show();
 
-	var name = data.name.toUpperCase();
-	var sex = data.sex;
-	if(name[0] in detail_data)
-		createDetailImage(name, sex);
-	else {
-		$.get("data/detailed_data/" + name[0] + ".json", function(data) {
-			// TODO: name should be passed in
-			detail_data[name[0]] = data;
+	setTimeout(function() {
+		var name = data.name.toUpperCase();
+		var sex = data.sex;
+		if(name[0] in detail_data)
 			createDetailImage(name, sex);
-		});
-	}
+		else {
+			$.get("data/detailed_data/" + name[0] + ".json", function(data) {
+				// TODO: name should be passed in
+				detail_data[name[0]] = data;
+				createDetailImage(name, sex);
+			});
+		}
+	}, 10);
 }
 
 function formatName(name) {
