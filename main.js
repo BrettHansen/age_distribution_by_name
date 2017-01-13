@@ -398,11 +398,11 @@ function createDetailImage(name, sex) {
 	var total = 0;
 	var dist = detail_data[name[0]][name][sex];
 
-	var svg_width = detail_content.width();
+	var svg_width = detail_content.width() - 30;
 	var svg_height = detail_content.height() - 30;
 	var left_margin = 40;
 	var top_margin = 20;
-	var width = svg_width - 2 * left_margin;
+	var width = svg_width - left_margin;
 	var height = svg_height - 2 * top_margin;
 	var max = Math.max(...dist);
 
