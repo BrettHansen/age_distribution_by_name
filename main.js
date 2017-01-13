@@ -17,6 +17,8 @@ var head_height = 40;
 var margin_width = 0;
 var box_height;
 var current_name_index = -1;
+var current_name;
+var current_sex;
 var parameters = [	{"display": "25th Percentile", "name": "q1"},
 					{"display": "50th Percentile", "name": "q2"},
 					{"display": "75th Percentile", "name": "q3"},
@@ -391,14 +393,115 @@ $(function() {
 });
 
 function createDetailImage(name, sex) {
+	current_name = name;
+	current_sex = sex;
 	var total = 0;
 	var dist = detail_data[name[0]][name][sex];
-	for(var y in dist)
-		total += dist[y]
+
+	var svg_width = detail_content.width();
+	var svg_height = detail_content.height() - 30;
+	var left_margin = 40;
+	var top_margin = 20;
+	var width = svg_width - 2 * left_margin;
+	var height = svg_height - 2 * top_margin;
+	var max = Math.max(...dist);
+
+	var x = d3.scaleBand().rangeRound([0, width]).padding(0.1);
+	var y = d3.scaleLinear().rangeRound([height, 0]);
+
+	x.domain(dist.map(function(d, i) { return i + 1880}));
+	y.domain([0, Math.max(...dist)]);
+
+	var svg = d3.select("#detail-modal-fill")
+			.append("svg")
+			.attr("width", svg_width)
+			.attr("height", svg_height);
+
+	var g = svg.append("g")
+			.attr("transform", "translate(" + left_margin + "," + top_margin + ")");
+
+	g.append("g")
+			.attr("class", "axis axis--x")
+			.attr("transform", "translate(0," + height + ")")
+			.call(d3.axisBottom(x).tickValues(d3.range(1880, 2020, 5)));
+
+	g.append("g")
+			.attr("class", "axis axis--y")
+			.call(d3.axisLeft(y).ticks(10))
+			.append("text")
+			.attr("transform", "rotate(-90)")
+			.attr("y", 6)
+			.attr("dy", "0.71em")
+			.attr("text-anchor", "end")
+			.text("Frequency");
+
+	var dist_year = g.selectAll("rect.dist-year")
+			.data(dist)
+			.enter().append("rect")
+			.attr("class", "dist-year")
+			.attr("x", function(d, i) {
+				return x(i + 1880);
+			})
+			.attr("y", function(d) {
+				return y(d);
+			})
+			.attr("width", x.bandwidth())
+			.attr("height", function(d) {
+				return height - y(d);
+			})
+			.attr("stroke", "none")
+			.attr("stroke-width", "1px")
+			.style("fill", function(d) {
+				return sex == "M" ? "#84CAEF" : "#80DAB6";
+			});
+
+	// var rects = svg.selectAll("rect.range")
+	// 				.data(close_names)
+	// 				.enter().append("rect")
+	// 				.attr("class", "range")
+	// 				.attr("x", function(d) {
+	// 					return d.x;
+	// 				})
+	// 				.attr("y", function(d) {
+	// 					return d.y + 2;
+	// 				})
+	// 				.attr("width", function(d) {
+	// 					return d.width;
+	// 				})
+	// 				.attr("height", function(d) {
+	// 					return d.height;
+	// 				})
+	// 				.style("fill", function(d) {
+	// 					return d.sex == "M" ? "#84CAEF" : "#80DAB6";
+	// 				});
+
+	// var ticks = svg.selectAll("line.tick")
+	// 				.data(d3.range(0, 95, 10).map(function(d) {
+	// 					return {"index" : d};
+	// 				}))
+	// 				.enter().append("line")
+	// 				.attr("class", "tick")
+	// 				.attr("x1", function(d) {
+	// 					d.x1 = margin_width + name_offset + d.index / 95.0 * width;
+	// 					return d.x1;
+	// 				})
+	// 				.attr("y1", function(d) {
+	// 					return head_height - 10;
+	// 				})
+	// 				.attr("x2", function(d) {
+	// 					return d.x1;
+	// 				})
+	// 				.attr("y2", function(d) {
+	// 					return height + head_height + 2;
+	// 				})
+	// 				.attr("stroke", "gray")
+	// 				.attr("stroke-width", function(d) {
+	// 					return d.index == 0 ? 2 : 1;
+	// 				});
+
 	loading_container.hide();
 	detail_content.show();
-	detail_content.text("Estimated number of living " + (sex == "M" ? "male " : "female ") + formatName(name) + "s: " + total.toString());
-	console.log(detail_data[name[0]][name][sex]);
+	// detail_content.text("Estimated number of living " + (sex == "M" ? "male " : "female ") + formatName(name) + "s: " + total.toString());
 }
 
 function loadDetailData(data) {
