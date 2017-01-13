@@ -400,7 +400,7 @@ function createDetailImage(name, sex) {
 
 	var svg_width = detail_content.width() - 30;
 	var svg_height = detail_content.height() - 30;
-	var left_margin = 40;
+	var left_margin = 50;
 	var top_margin = 20;
 	var width = svg_width - left_margin;
 	var height = svg_height - 2 * top_margin;
