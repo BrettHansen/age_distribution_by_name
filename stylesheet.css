@@ -92,3 +92,20 @@ text.age_label {
 	width: 100%;
 	height: 100%;
 }
+
+#loading-animation-container {
+	width: 100%;
+	height: 100%;
+	text-align: center;
+}
+
+#loading-animation {
+	display: block;
+	margin: auto;
+}
+
+#detail-modal-fill {
+	display: none;
+	width: 100%;
+	height: 100%;
+}

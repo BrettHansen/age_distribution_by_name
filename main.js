@@ -24,6 +24,9 @@ var parameters = [	{"display": "25th Percentile", "name": "q1"},
 					{"display": "Mean Age", "name": "mean"}];
 var param_values = [0, 0, 0, 0, 0];
 var detail_modal;
+var detail_content; 
+var detail_name;
+var loading_container;
 var detail_data;
 
 function getCloseNames() {
@@ -117,6 +120,9 @@ function initialize(selected_name_index, same_name) {
 	}
 
 	detail_modal = $("#modal-dist-detail");
+	detail_content = detail_modal.find("#detail-modal-fill");
+	detail_name = detail_modal.find(".name-fill");
+	loading_container = detail_modal.find("#loading-animation-container");
 	detail_data = new Object();
 
 	var svg = d3.select("#distribution")
@@ -389,13 +395,18 @@ function createDetailImage(name, sex) {
 	var dist = detail_data[name[0]][name][sex];
 	for(var y in dist)
 		total += dist[y]
-	detail_modal.find("#detail-modal-fill").text("Estimated number of living " + (sex == "M" ? "male " : "female ") + formatName(name) + "s: " + total.toString());
+	loading_container.hide();
+	detail_content.show();
+	detail_content.text("Estimated number of living " + (sex == "M" ? "male " : "female ") + formatName(name) + "s: " + total.toString());
 	console.log(detail_data[name[0]][name][sex]);
 }
 
 function loadDetailData(data) {
-	detail_modal.find("#detail-modal-fill").empty();
-	detail_modal.find(".name-fill").text(formatName(data.name));
+	detail_content.empty();
+	detail_name.text(formatName(data.name));
+	loading_container.css("padding-top", loading_container.outerHeight(true) / 2);
+	loading_container.show();
+	detail_content.hide();
 	detail_modal.show();
 
 	setTimeout(function() {
