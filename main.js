@@ -71,6 +71,10 @@ function dist(a, b) {
 	return score;
 }
 
+$(window).resize(function() {
+	initialize(current_name_index, true);
+});
+
 function initialize(selected_name_index, same_name) {
 	$("#distribution").empty();
 	if(selected_name_index == -1) {
