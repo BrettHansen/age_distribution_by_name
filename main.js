@@ -455,53 +455,8 @@ function createDetailImage(name, sex) {
 				return sex == "M" ? "#84CAEF" : "#80DAB6";
 			});
 
-	// var rects = svg.selectAll("rect.range")
-	// 				.data(close_names)
-	// 				.enter().append("rect")
-	// 				.attr("class", "range")
-	// 				.attr("x", function(d) {
-	// 					return d.x;
-	// 				})
-	// 				.attr("y", function(d) {
-	// 					return d.y + 2;
-	// 				})
-	// 				.attr("width", function(d) {
-	// 					return d.width;
-	// 				})
-	// 				.attr("height", function(d) {
-	// 					return d.height;
-	// 				})
-	// 				.style("fill", function(d) {
-	// 					return d.sex == "M" ? "#84CAEF" : "#80DAB6";
-	// 				});
-
-	// var ticks = svg.selectAll("line.tick")
-	// 				.data(d3.range(0, 95, 10).map(function(d) {
-	// 					return {"index" : d};
-	// 				}))
-	// 				.enter().append("line")
-	// 				.attr("class", "tick")
-	// 				.attr("x1", function(d) {
-	// 					d.x1 = margin_width + name_offset + d.index / 95.0 * width;
-	// 					return d.x1;
-	// 				})
-	// 				.attr("y1", function(d) {
-	// 					return head_height - 10;
-	// 				})
-	// 				.attr("x2", function(d) {
-	// 					return d.x1;
-	// 				})
-	// 				.attr("y2", function(d) {
-	// 					return height + head_height + 2;
-	// 				})
-	// 				.attr("stroke", "gray")
-	// 				.attr("stroke-width", function(d) {
-	// 					return d.index == 0 ? 2 : 1;
-	// 				});
-
 	loading_container.hide();
 	detail_content.show();
-	// detail_content.text("Estimated number of living " + (sex == "M" ? "male " : "female ") + formatName(name) + "s: " + total.toString());
 }
 
 function loadDetailData(data) {
